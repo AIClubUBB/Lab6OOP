@@ -80,26 +80,39 @@ void BenutzerRepository::writeToFileBen()
 	ofstream f("Watchlist.txt");
 	for (int i = 0; i < WatchList.size(); i++)
 	{
-		f << WatchList[i].get_titel() << " ";
-		f << WatchList[i].get_genre() << " ";
-		f << WatchList[i].get_erscheinungsJahr() << " ";
-		f << WatchList[i].get_anzahlLikes() << " ";
+		f << WatchList[i].get_titel() << "`";
+		f << WatchList[i].get_genre() << "`";
+		f << WatchList[i].get_erscheinungsJahr() << "`";
+		f << WatchList[i].get_anzahlLikes() << "`";
 		f << WatchList[i].get_trailer() << "\n";
 	}
 	f.close();
 }
-
+/*istream& operator>>(std::istream& is, string &s)
+{
+	getline(is, s, '`');
+	return is;
+}*/
 void BenutzerRepository::readFromFileBen()
 {
 	ifstream g("Watchlist.txt");
 	string title = "";
 	string genre = "";
 	string trailer = "";
+	char ti[100], c, ge[50], tra[100], ye[10], li[10];
 	int year, likes;
 	WatchList.clear();
-	while (g >> title)
+	while (g.getline(ti, 99, '`'))
 	{
-		g >> genre >> year >> likes >> trailer;
+		g.getline(ge, 50, '`');
+		g.getline(ye, 10, '`');
+		g.getline(li, 10, '`');
+		g.getline(tra, 100, '\n');
+		year = atoi(ye);
+		likes = atoi(li);
+		title = ti;
+		genre = ge;
+		trailer = tra;
 		WatchList.push_back(Film(title, genre, year, likes, trailer));
 	}
 	g.close();

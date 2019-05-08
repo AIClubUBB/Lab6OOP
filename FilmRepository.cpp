@@ -130,15 +130,19 @@ void FilmRepository::writeToFileFilm()
 	ofstream fout("Films.txt");
 	for (int i = 0; i < vectorFilme.size(); i++)
 	{
-		fout << vectorFilme[i].get_titel() << " ";
-		fout << vectorFilme[i].get_genre() << " ";
-		fout << vectorFilme[i].get_erscheinungsJahr() << " ";
-		fout << vectorFilme[i].get_anzahlLikes() << " ";
+		fout << vectorFilme[i].get_titel() << "`";
+		fout << vectorFilme[i].get_genre() << "`";
+		fout << vectorFilme[i].get_erscheinungsJahr() << "`";
+		fout << vectorFilme[i].get_anzahlLikes() << "`";
 		fout << vectorFilme[i].get_trailer() << "\n";
 	}
 	fout.close();
 }
-
+/*istream& operator>>(std::istream& is, string &s)
+{
+	getline(is, s, '`');
+	return is;
+}*/
 void FilmRepository::readFromFileFilm()
 {
 	ifstream fin("Films.txt");
@@ -146,13 +150,28 @@ void FilmRepository::readFromFileFilm()
 	string genre = "";
 	string trailer = "";
 	int year,likes;
+	char ti[100], c, ge[50], tra[100], ye[10], li[10];
 	vectorFilme.clear();
-	while (fin>>title)
+	while (fin.getline(ti,99,'`'))
+	{
+		fin.getline(ge, 50, '`');
+		fin.getline(ye, 10, '`');
+		fin.getline(li, 10, '`');
+		fin.getline(tra, 100, '\n');
+		year = atoi(ye);
+		likes = atoi(li);
+		title = ti;
+		genre = ge;
+		trailer = tra;
+		vectorFilme.push_back(Film(title, genre, year, likes, trailer));
+	}
+	fin.close();
+	/*while (fin>>title)
 	{
 		fin >> genre >> year >> likes >> trailer;
 		vectorFilme.push_back(Film(title,genre,year,likes,trailer));
 	}
-	fin.close();
+	fin.close();*/
 }
 
 FilmRepository::~FilmRepository()
